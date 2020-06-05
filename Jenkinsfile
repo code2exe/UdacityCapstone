@@ -5,7 +5,7 @@ pipeline {
     stage('Set current kubectl context') {
 			steps {
 				withAWS(region:'eu-west-2', credentials:'ACredentials') {
-				  sh  'export context=$(kubectl config current-context)'
+				  sh  'context=$(kubectl config current-context)'
 					sh	'kubectl config use-context $context'
 			
 				}
