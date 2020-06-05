@@ -4,7 +4,7 @@ lint:
 	hadolint Dockerfile
 
 build:
-    sh ./scripts/build_docker.sh	
+	sh ./scripts/build_docker.sh	
 
 upload:
 	sh ./scripts/upload_docker.sh
