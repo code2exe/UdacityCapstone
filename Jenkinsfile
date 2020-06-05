@@ -29,9 +29,8 @@ pipeline {
 		stage('Create Config File Cluster') {
 			steps {
 				withAWS(region:'eu-west-2', credentials:'ACredentials') {
-					sh '''
-						aws eks --region eu-west-2 update-kubeconfig --name udacapstone --region eu-west-2 --alias udacapstone
-					'''
+					sh 'aws eks update-kubeconfig --name udacapstone --region eu-west-2 --alias udacapstone'
+					
 				}
 			}
 		}
