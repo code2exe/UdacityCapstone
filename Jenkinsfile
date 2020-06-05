@@ -23,7 +23,7 @@ pipeline {
     
     stage('Build Docker Container') {
       steps {
-        sh 'make build'
+        sh 'docker build --tag=udacity-capstone .'
       }
     }
     
