@@ -5,7 +5,7 @@ pipeline {
     stage('Set current kubectl context') {
 			steps {
 				withAWS(region:'eu-west-2', credentials:'ACredentials') {
-					sh	'kubectl config use-context udacapstone
+					sh	'kubectl config use-context udacapstone'
 			
 				}
 			}
