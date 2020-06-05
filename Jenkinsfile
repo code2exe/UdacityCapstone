@@ -5,7 +5,8 @@ pipeline {
     stage('Set current kubectl context') {
 			steps {
 				withAWS(region:'eu-west-2', credentials:'ACredentials') {
-					sh	'kubectl config use-context arn:aws:eks:us-east-1:142977788479:cluster/udacapstone'
+				  sh  'export context=$(kubectl config current-context)'
+					sh	'kubectl config use-context $context'
 			
 				}
 			}
@@ -15,7 +16,7 @@ pipeline {
 			steps {
 			  dir('k8s')  {
 				withAWS(region:'eu-west-2', credentials:'ACredentials') {
-					sh 'kubectl apply -f blue-controller.json'
+					sh 'kubectl apply --context $context -f blue-controller.json'
 				
 				}
 			}
@@ -26,7 +27,7 @@ pipeline {
 			steps {
 			  dir('k8s')  {
 				withAWS(region:'eu-west-2', credentials:'ACredentials') {
-					sh 'kubectl apply -f green-controller.json'
+					sh 'kubectl apply --context $context -f green-controller.json'
 				
 				}
 			}
@@ -37,7 +38,7 @@ pipeline {
 			steps {
 			  dir('k8s')  {
 				withAWS(region:'eu-west-2', credentials:'ACredentials') {
-					sh 'kubectl apply -f blue-service.json'
+					sh 'kubectl apply --context $context -f blue-service.json'
 				
 				}
 			}
@@ -54,7 +55,7 @@ pipeline {
 			steps {
 			  dir('k8s')  {
 				withAWS(region:'eu-west-2', credentials:'ACredentials') {
-					sh 'kubectl apply -f green-service.json'
+					sh 'kubectl apply --context $context -f green-service.json'
 				
 				      }
 			      }
