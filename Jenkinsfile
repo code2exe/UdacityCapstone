@@ -35,15 +35,15 @@ pipeline {
       }
     }
     
-    stage('Login and Deploy to DockerHub') {
-      steps {
-        script {
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
+    stage('Build & Push to dockerhub') {
+            steps {
+                script {
+                    docker.withRegistry('', registryCredential) {
+                        dockerImage.push()
+                    }
+                }
             }
-          }
         }
-        
     stage('Remove unused Image') {
       steps {
         sh "docker rmi $registry:$BUILD_NUMBER"
