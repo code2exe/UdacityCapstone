@@ -1,10 +1,11 @@
 pipeline {
   environment {
-    registry = "ojbashxx/udacty-capstone"
-    registryCredential = ‘dockerhub’
+    registry = "ojbashxx/udacity-capstone"
+    registryCredential = 'dockerhub'
     dockerImage = ''
 }
   agent any
+  
   stages {
     stage('Lint') {
         parallel{
