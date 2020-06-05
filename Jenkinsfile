@@ -14,7 +14,7 @@ pipeline {
 						--nodes 2 \
 						--nodes-min 1 \
 						--nodes-max 3 \
-						--node-ami ami-07b4f3c02c7f83d59 \
+						--node-ami-family Ubuntu1804 \
 						--region eu-west-2 \
 						--zones eu-west-2a \
 						--zones eu-west-2b \
