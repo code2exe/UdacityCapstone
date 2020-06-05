@@ -10,10 +10,10 @@ export dockerpath="ojbashxx/udacity-capstone"
 
 # Step 2:  
 # Authenticate & tag
-docker tag udacity-capstone $dockerpath
+sudo docker tag udacity-capstone $dockerpath
 
 echo "Docker ID and Image: $dockerpath"
 
 # Step 3:
 # Push image to a docker repository
-docker push $dockerpath
+sudo docker push $dockerpath
