@@ -7,52 +7,65 @@ pipeline {
   agent any
   
   stages {
-    stage('Lint') {
-        parallel{
-        stage('Lint Docker'){
-      steps {
-        sh 'hadolint Dockerfile'
-      }
-      }
-      stage('Lint HTML'){
-      steps {
-        sh 'tidy -q -e html/*.html'
-      }
-      }
-    }
-     post {
-        failure {
-           echo 'This build has failed. See logs for details.'
-         }
-      }
-    }
-    
-    stage('Build Docker Container') {
-      steps {
-        script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
-        }
-      }
-    }
-    
-    stage('Build & Push to dockerhub') {
+    stage('Set current kubectl context') {
+			steps {
+				withAWS(region:'eu-west-2', credentials:'ACredentials') {
+					sh '''
+						kubectl config use-context arn:aws:eks:us-east-1:142977788479:cluster/capstonecluster
+					'''
+				}
+			}
+		}
+
+		stage('Deploy blue container') {
+			steps {
+			  dir('k8s')  {
+				withAWS(region:'eu-west-2', credentials:'ACredentials') {
+					sh 'kubectl apply -f blue-controller.json'
+				
+				}
+			}
+		}
+		}
+
+		stage('Deploy green container') {
+			steps {
+			  dir('k8s')  {
+				withAWS(region:'eu-west-2', credentials:'ACredentials') {
+					sh 'kubectl apply -f green-controller.json'
+				
+				}
+			}
+		}
+		}
+
+		stage('Create the service in the cluster, redirect to blue') {
+			steps {
+			  dir('k8s')  {
+				withAWS(region:'eu-west-2', credentials:'ACredentials') {
+					sh 'kubectl apply -f blue-service.json'
+				
+				}
+			}
+		}
+		}
+
+		stage('Wait user approve') {
             steps {
-                script {
-                    docker.withRegistry('', registryCredential) {
-                        dockerImage.push()
-                    }
-                }
+                input "Ready to redirect traffic to green?"
             }
         }
-    stage("Cleaning Docker up") {
-            steps {
-                script {
-                    sh "echo 'Cleaning Docker up'"
-                    sh "docker system prune -f"
-                }
-            }
-        }
- 
-   
-  }
-  }
+
+		stage('Create the service in the cluster, redirect to green') {
+			steps {
+			  dir('k8s')  {
+				withAWS(region:'eu-west-2', credentials:'ACredentials') {
+					sh 'kubectl apply -f green-service.json'
+				
+				}
+			}
+		}
+		}
+
+	}
+}
