@@ -44,12 +44,14 @@ pipeline {
                 }
             }
         }
-    stage('Remove unused Image') {
-      steps {
-        sh "docker rmi $registry:$BUILD_NUMBER"
-      }
-    }
- 
+    stage("Cleaning Docker up") {
+            steps {
+                script {
+                    sh "echo 'Cleaning Docker up'"
+                    sh "docker system prune"
+                }
+            }
+        }
  
    
   }
