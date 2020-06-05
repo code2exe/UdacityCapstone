@@ -1,4 +1,9 @@
 pipeline {
+  environment {
+    registry = "ojbashxx/udacty-capstone"
+    registryCredential = ‘dockerhub’
+    dockerImage = ''
+}
   agent any
   stages {
     stage('Lint') {
@@ -23,24 +28,28 @@ pipeline {
     
     stage('Build Docker Container') {
       steps {
-        sh 'docker build --tag=udacity-capstone .'
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
       }
     }
     
-    stage('Login to DockerHub') {
+    stage('Login and Deploy to DockerHub') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'docker-pwd', usernameVariable: 'docker-user')]) {
-        sh 'docker login -u ${docker-user} -p ${docker-pwd}'
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
     }
       }
     }
-    stage('Upload Image to DockerHub') {
+    stage('Remove unused Image') {
       steps {
-        sh 'make upload'
+        sh "docker rmi $registry:$BUILD_NUMBER"
       }
     }
  
  
    
+  }
   }
   }
