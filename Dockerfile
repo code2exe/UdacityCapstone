@@ -1,5 +1,4 @@
-FROM nginx
-
+FROM nginx:stable
 ## Step 1:
 RUN rm /usr/share/nginx/html/index.html
 

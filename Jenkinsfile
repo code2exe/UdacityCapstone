@@ -5,7 +5,7 @@ pipeline {
         parallel{
         stage('Lint Docker'){
       steps {
-        sh 'make lint'
+        sh 'hadolint Dockerfile'
       }
       }
       stage('Lint HTML'){
