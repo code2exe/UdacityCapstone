@@ -2,12 +2,12 @@ pipeline {
 	agent any
 	stages {
 
-		stage('Create kubernetes cluster') {
+		stage('Create K8s Cluster') {
 			steps {
-				withAWS(region:'us-east-1', credentials:'ACredentials') {
+				withAWS(region:'eu-west-2', credentials:'ACredentials') {
 					sh '''
 						eksctl create cluster \
-						--name capstonecluster \
+						--name udacapstone \
 						--version 1.13 \
 						--nodegroup-name standard-workers \
 						--node-type t2.small \
@@ -15,10 +15,10 @@ pipeline {
 						--nodes-min 1 \
 						--nodes-max 3 \
 						--node-ami auto \
-						--region us-east-1 \
-						--zones us-east-1a \
-						--zones us-east-1b \
-						--zones us-east-1c \
+						--region eu-west-2 \
+						--zones eu-west-2a \
+						--zones eu-west-2b \
+						--zones eu-west-2c \
 					'''
 				}
 			}
@@ -26,11 +26,11 @@ pipeline {
 
 		
 
-		stage('Create conf file cluster') {
+		stage('Create Config File Cluster') {
 			steps {
-				withAWS(region:'us-east-1', credentials:'ACredentials') {
+				withAWS(region:'eu-west-2', credentials:'ACredentials') {
 					sh '''
-						aws eks --region us-east-1 update-kubeconfig --name capstonecluster
+						aws eks --region eu-west-2 update-kubeconfig --name udacapstone
 					'''
 				}
 			}
