@@ -30,7 +30,7 @@ pipeline {
 			steps {
 				withAWS(region:'eu-west-2', credentials:'ACredentials') {
 					sh '''
-						aws eks --region eu-west-2 update-kubeconfig --name udacapstone
+						aws eks --region eu-west-2 update-kubeconfig --name udacapstone --region eu-west-2 --alias udacapstone
 					'''
 				}
 			}
